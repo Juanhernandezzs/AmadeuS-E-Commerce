@@ -19,8 +19,10 @@ export default function Home() {
 
   return (
     <div className={classes.home}>
-      <Nav />
-      <Slideshow />
+      <div>
+        <Nav />
+        <Slideshow />
+      </div>
       <Catalogue />
       <Footer />
     </div>
