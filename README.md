@@ -22,8 +22,8 @@ You can add and remove items from your cart, simulate a purchase using MercadoPa
 You can search for a specific product, add to your favorites and share the product on Facebook and WhatsApp.\
 To simulate a purchase you will need to use this account:\
 \
-username: TESTEGMDJOCR\
-password: qatest7910
+username: TESTUSER396333103\
+password: 9I7QLmAf1d
 
 ## Contact info
 You can contact me via email: juanmhdz99@gmail.com\
