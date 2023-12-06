@@ -4,7 +4,7 @@ import './landing.css'
 import { makeStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 // import videoHenry1 from './media/videoHenry1.mp4'
-import fotoHenry from './media/fotoHenry.png'
+// import fotoHenry from './media/fotoHenry.png'
 
 const useStyles = makeStyles((theme) => ({
   logo: {

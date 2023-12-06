@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   sortByNameFavorites,
   sortByPriceFavorites,
-  filterByCategoryFavorites,
-} from "../../redux/actions/favorites";
-// import { getAllCategories } from "../../redux/actions/getAllCategories";
-import {
-  getAllFavorites,
-  removeAllFavorites,
 } from "../../redux/actions/favorites";
 import Nav from "../nav/Nav";
 import ProductCard from "../productcard/ProductCard";
@@ -21,7 +15,6 @@ import {
   Select,
   MenuItem,
   Typography,
-  Button,
 } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 const { REACT_APP_SERVER } = process.env;
@@ -37,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
   },
   gridContainer: {
     margin: "auto",
-    maxWidth: "200vh",
   },
   root: {
     "& > * + *": {
@@ -49,14 +41,10 @@ const useStyles = makeStyles((theme) => ({
 export default function Favorites() {
   const { user } = useAuth0();
   const dispatch = useDispatch();
-  // const categories = useSelector(({ app }) => app.categoriesLoaded);
   const favorites = useSelector(({ app }) => app.favorites);
-  const currentUser = useSelector(({ app }) => app.user);
 
   const classes = useStyles();
 
-  // Para renderizar cuando hay ordenamientos y filtrado
-  const [render, setRender] = useState("");
   // Controlador de los select's
   const [select, setSelect] = useState({
     name: "",
@@ -76,7 +64,6 @@ export default function Favorites() {
 
   function handleSortName(e) {
     dispatch(sortByNameFavorites(e.target.value));
-    setRender(`Sort ${e.target.value}`);
     setSelect({
       ...select,
       name: e.target.value,
@@ -86,7 +73,6 @@ export default function Favorites() {
 
   function handleSortPrice(e) {
     dispatch(sortByPriceFavorites(e.target.value));
-    setRender(`Sort ${e.target.value}`);
     setSelect({
       ...select,
       price: e.target.value,
@@ -108,6 +94,9 @@ export default function Favorites() {
     setPage(value);
   }
 
+  const setProducts = (e) => {
+    setFavoritesPerPage(e.target.value);
+  };
   return (
     <>
       <Nav />
@@ -148,9 +137,7 @@ export default function Favorites() {
                                 </FormControl> */}
 
                 <FormControl className={classes.formControl}>
-                  <InputLabel className={classes.label}>
-                    Nombre
-                  </InputLabel>
+                  <InputLabel className={classes.label}>Nombre</InputLabel>
                   <Select
                     value={select.name}
                     onChange={(e) => handleSortName(e)}
@@ -161,15 +148,27 @@ export default function Favorites() {
                 </FormControl>
 
                 <FormControl className={classes.formControl}>
-                  <InputLabel className={classes.label}>
-                    Precio
-                  </InputLabel>
+                  <InputLabel className={classes.label}>Precio</InputLabel>
                   <Select
                     value={select.price}
                     onChange={(e) => handleSortPrice(e)}
                   >
                     <MenuItem value="Lower to Higher">Menor a Mayor</MenuItem>
                     <MenuItem value="Higher to Lower">Mayor a Menor</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <FormControl className={classes.formControl}>
+                  <InputLabel className={classes.label}>Mostrar:</InputLabel>
+                  <Select
+                    value={favoritesPerPage}
+                    onChange={(e) => setProducts(e)}
+                  >
+                    <MenuItem value={6}>6</MenuItem>
+                    <MenuItem value={9}>9</MenuItem>
+                    <MenuItem value={12}>12</MenuItem>
+                    <MenuItem value={15}>15</MenuItem>
+                    <MenuItem value={18}>18</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -180,6 +179,7 @@ export default function Favorites() {
                 justifyContent="center"
                 alignItems="center"
                 className={classes.gridContainer}
+                sm={8}
               >
                 {currentFavorites?.map((favorite) => {
                   return (

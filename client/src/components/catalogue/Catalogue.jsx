@@ -6,7 +6,8 @@ import {
   Select,
   MenuItem,
   CircularProgress,
-  Container
+  Container,
+  Button,
 } from "@material-ui/core";
 
 import { Pagination } from "@material-ui/lab";
@@ -20,16 +21,12 @@ import getAllProducts, {
 } from "../../redux/actions/getAllProducts";
 import { getAllCategories } from "../../redux/actions/getAllCategories";
 import { getByName } from "../../redux/actions/getByName";
-import { UserContext } from '../shoppingcart/UserContext';
-import { useAuth0 } from "@auth0/auth0-react";
+import { UserContext } from "../shoppingcart/UserContext";
 import { linkUserCart } from "../../redux/actions/linkUserCart";
-import { getCart } from "../../utils";
-import {getAllUsers} from '../../redux/actions/users'
 import { itemsDbToCart } from "../../redux/actions/itemsDbToCart";
 import { getAllFavorites } from "../../redux/actions/favorites";
-import Footer from "../footer/Footer";
+import ClearIcon from "@material-ui/icons/Clear";
 const { REACT_APP_SERVER } = process.env;
-  
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -41,29 +38,31 @@ const useStyles = makeStyles((theme) => ({
   },
   gridContainer: {
     margin: "auto",
-    [theme.breakpoints.down('sm')]: {
-      margin: 'auto'
+    [theme.breakpoints.down("sm")]: {
+      margin: "auto",
     },
   },
   gridFilter: {
     margin: "auto",
     marginTop: "0vh",
-    display: 'flex',
-    [theme.breakpoints.down('xs')]: {
-      width: '100vh'
-    }
-    
+    display: "flex",
+    [theme.breakpoints.down("xs")]: {
+      width: "100vh",
+    },
   },
   root: {
     "& > * + *": {
       marginTop: theme.spacing(0),
     },
   },
+  clearButton: {
+    marginTop: "2vh",
+  },
 }));
 
 export default function Catalogue() {
-  const {shoppingCart, setShoppingCart} = useContext( UserContext )
-  const {cartQuantity, userItems, cantItemsDbToCart} = shoppingCart
+  const { shoppingCart, setShoppingCart } = useContext(UserContext);
+  const { cartQuantity } = shoppingCart;
   const { data, loading, success } = useSelector(
     ({ app }) => app.productsLoaded
   );
@@ -74,43 +73,40 @@ export default function Catalogue() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(user) {
-      dispatch( itemsDbToCart( user.cart ))
+    if (user) {
+      dispatch(itemsDbToCart(user.cart));
       dispatch(getAllFavorites(user._id));
-    }
-  }, [user])
+    } // eslint-disable-next-line
+  }, [user]);
 
   useEffect(() => {
-    const alStorage = JSON.stringify(cartState)
-    if( !user ){
-      window.localStorage.setItem('cartItems', alStorage )
+    const alStorage = JSON.stringify(cartState);
+    if (!user) {
+      window.localStorage.setItem("cartItems", alStorage);
     } else {
-      const { cart } = JSON.parse(alStorage)
+      const { cart } = JSON.parse(alStorage);
       const userCart = {
         user,
-        cart
-      }
-      window.localStorage.removeItem('cartItems')
-      if(userCart)
-        dispatch( linkUserCart( userCart ) )
+        cart,
+      };
+      window.localStorage.removeItem("cartItems");
+      if (userCart) dispatch(linkUserCart(userCart));
     }
-    setShoppingCart( prev => ({
+    setShoppingCart((prev) => ({
       ...prev,
-      cartQuantity: cartState.cart.reduce( (acc, elem) => {
-        return ( acc = acc + elem.quantity)
+      cartQuantity: cartState.cart.reduce((acc, elem) => {
+        return (acc = acc + elem.quantity);
       }, 0),
-    }))
-  }, [cartQuantity, cartState])
+    })); // eslint-disable-next-line
+  }, [cartQuantity, cartState]);
 
   useEffect(() => {
     if (!search || search.length === 0) {
       dispatch(getAllProducts());
     }
-    dispatch(getAllCategories());
+    dispatch(getAllCategories()); // eslint-disable-next-line
   }, [dispatch]);
 
-  // Para renderizar cuando hay ordenamientos y filtrado
-  const [render, setRender] = useState("");
   // Controlador de los select's
   const [select, setSelect] = useState({
     name: "",
@@ -124,12 +120,10 @@ export default function Catalogue() {
   const indexLastProduct = page * productsPerPage;
   const indexFirstProduct = indexLastProduct - productsPerPage;
   const currentProducts = data.slice(indexFirstProduct, indexLastProduct);
-  console.log(currentProducts)
   const classes = useStyles();
 
   function handleSortName(e) {
     dispatch(sortByName(e.target.value));
-    setRender(`Sort ${e.target.value}`);
     setSelect({
       ...select,
       name: e.target.value,
@@ -139,7 +133,6 @@ export default function Catalogue() {
 
   function handleSortPrice(e) {
     dispatch(sortByPrice(e.target.value));
-    setRender(`Sort ${e.target.value}`);
     setSelect({
       ...select,
       price: e.target.value,
@@ -160,7 +153,7 @@ export default function Catalogue() {
   }
 
   useEffect(() => {
-    dispatch(filterByCategory(select.filter));
+    dispatch(filterByCategory(select.filter)); // eslint-disable-next-line
   }, [select.filter]);
 
   useEffect(() => {
@@ -174,11 +167,20 @@ export default function Catalogue() {
     setShoppingCart((prev) => ({
       ...prev,
       cartQuantity: JSON.parse(localStorage.getItem("cant")),
-    }));
+    })); // eslint-disable-next-line
   }, [dispatch, search]);
 
+  const clearFilters = () => {
+    setSelect({});
+    dispatch(getAllProducts());
+  };
+
+  const setProducts = (e) => {
+    setProductsPerPage(e.target.value);
+  };
+
   return (
-    <Container style={{ marginTop: "2vh", overflow: 'hidden' }}>
+    <Container style={{ marginTop: "2vh", overflow: "hidden" }}>
       {loading && (
         <div className="loading">
           <CircularProgress />
@@ -190,14 +192,12 @@ export default function Catalogue() {
             container
             direction="row"
             justifyContent="center"
-            xs = {9}
-            sm = {12}
+            xs={9}
+            sm={12}
             className={classes.gridFilter}
           >
             <FormControl className={classes.formControl}>
-              <InputLabel className={classes.label}>
-                Categoria
-              </InputLabel>
+              <InputLabel className={classes.label}>Categoria</InputLabel>
               <Select
                 value={select.filter}
                 onChange={(e) => handleFilterCategory(e)}
@@ -212,9 +212,7 @@ export default function Catalogue() {
             </FormControl>
 
             <FormControl className={classes.formControl}>
-              <InputLabel className={classes.label}>
-                Nombre
-              </InputLabel>
+              <InputLabel className={classes.label}>Nombre</InputLabel>
               <Select value={select.name} onChange={(e) => handleSortName(e)}>
                 <MenuItem value="A - Z">A - Z</MenuItem>
                 <MenuItem value="Z - A">Z - A</MenuItem>
@@ -222,13 +220,29 @@ export default function Catalogue() {
             </FormControl>
 
             <FormControl className={classes.formControl}>
-              <InputLabel className={classes.label}>
-                Precio
-              </InputLabel>
+              <InputLabel className={classes.label}>Precio</InputLabel>
               <Select value={select.price} onChange={(e) => handleSortPrice(e)}>
                 <MenuItem value="Lower to Higher">Menor a Mayor</MenuItem>
                 <MenuItem value="Higher to Lower">Mayor a Menor</MenuItem>
               </Select>
+            </FormControl>
+
+            <FormControl className={classes.formControl}>
+                <InputLabel className={classes.label}>Mostrar:</InputLabel>
+                <Select
+                  value={productsPerPage}
+                  onChange={(e) => setProducts(e)}
+                >
+                  <MenuItem value={8}>8</MenuItem>
+                  <MenuItem value={12}>12</MenuItem>
+                  <MenuItem value={24}>24</MenuItem>
+                </Select>
+              </FormControl>
+
+            <FormControl className={classes.clearButton}>
+              <Button onClick={clearFilters}>
+                <ClearIcon />
+              </Button>
             </FormControl>
           </Grid>
 
@@ -237,7 +251,7 @@ export default function Catalogue() {
             direction="row"
             justifyContent="center"
             className={classes.gridContainer}
-            sm ={12}
+            sm={12}
           >
             {currentProducts?.map((product) => {
               return (
@@ -271,9 +285,7 @@ export default function Catalogue() {
             />
           </Grid>
         </>
-        
       )}
-     
     </Container>
   );
 }

@@ -1,14 +1,24 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { makeStyles, AppBar, Toolbar, Typography, Box, Container, InputLabel, Button, IconButton, Grid, MenuItem, Badge, Menu } from '@material-ui/core';
-import { LocationOn, ShoppingCart, AccountCircle, Favorite, Mail, HomeRounded } from "@material-ui/icons";
-import logo from '../../img/logo_ecommerce.jpg';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import {
+  makeStyles,
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Button,
+  IconButton,
+  MenuItem,
+  Badge,
+  Menu,
+} from "@material-ui/core";
+import { AccountCircle, Favorite, Mail, HomeRounded } from "@material-ui/icons";
+// import logo from "../../img/logo_ecommerce.jpg";
+import { Link } from "react-router-dom";
 import LoginLogout from "../account/LoginLogout";
-import OnlyLogin from "../account/OnlyLogin";
-import axios from 'axios';
+import axios from "axios";
 import { useAuth0 } from "@auth0/auth0-react";
-import { UserContext } from "../shoppingcart/UserContext";
+import logo from "./logo.jpg";
 const { REACT_APP_SERVER } = process.env;
 
 // const useStyles = makeStyles((theme) => ({
@@ -52,10 +62,15 @@ const useStyles = makeStyles((theme) => ({
     // backgroundSize: "contain",
     // // margin: "auto",
     // // borderRadius: "6px",
-    fontFamily: "Abadi MT Condensed Light",/*  "Garamond",  */
+    // fontFamily: "Abadi MT Condensed Light" /*  "Garamond",  */,
+    // fontSize: "40px",
+    // color: "white",
+    // textDecoration: "underline white"
+    marginLeft: "10px",
     fontSize: "40px",
     color: "white",
     // textDecoration: "underline white"
+    textDecoration: "none",
   },
   avatar: {
     width: "2vw",
@@ -64,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
   },
   welcome: {
     // marginTop: "2vh",
-    color: theme.palette.primary.light
+    color: theme.palette.primary.light,
   },
   text: {
     color: theme.palette.primary.light,
@@ -77,28 +92,19 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  logoImage: {
+    maxHeight: "50px",
+    maxWidth: "50px",
+  },
 }));
-
 
 export default function NavSecondary({ shipping, success }) {
   const classes = useStyles();
   const userRedux = useSelector(({ app }) => app.user);
-  const shoppingCartProducts = useSelector((state) => state.cart.cart);
-
   const [userDb, setUserDb] = useState();
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
-  const favorites = useSelector(({ app }) => app.favorites);
-  // const currentUser = useSelector(({app}) => app.user);
-  const users = useSelector(({ app }) => app.usersLoaded);
-  const { isAuthenticated, user, isLoading } = useAuth0();
-  // const userDB = useSelector((state) => state.app.user);
-  // console.log("usuario DB", userDb);
-  const dispatch = useDispatch();
-  // console.log("nav", isAuthenticated);
-  // console.log("auth0 user", user);
-
+  const { isAuthenticated } = useAuth0();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -115,27 +121,25 @@ export default function NavSecondary({ shipping, success }) {
     handleMobileMenuClose();
   };
 
-  const { shoppingCart } = useContext(UserContext);
-  const { cartQuantity } = shoppingCart;
   const menuId = "primary-search-account-menu";
 
-  const adminAuth = function () {
-    let usersAdmin = [];
-    if (!isLoading) {
-      if (user) {
-        users.forEach((u) => {
-          u.isAdmin === true && usersAdmin.push(u.email);
-        });
-        // return user.email && usersAdmin.includes(user.email) ? true : false;
-        return (user.email && user.email === "crismaxbar@gmail.com") ||
-          user.email === "heisjuanpablo@gmail.com" ||
-          user.email === "leandrobuzeta@gmail.com" ||
-          user.email === "juanmhdz99@gmail.com"
-          ? true
-          : false;
-      }
-    }
-  };
+  // const adminAuth = function () {
+  //   let usersAdmin = [];
+  //   if (!isLoading) {
+  //     if (user) {
+  //       users.forEach((u) => {
+  //         u.isAdmin === true && usersAdmin.push(u.email);
+  //       });
+  //       // return user.email && usersAdmin.includes(user.email) ? true : false;
+  //       return (user.email && user.email === "crismaxbar@gmail.com") ||
+  //         user.email === "heisjuanpablo@gmail.com" ||
+  //         user.email === "leandrobuzeta@gmail.com" ||
+  //         user.email === "juanmhdz99@gmail.com"
+  //         ? true
+  //         : false;
+  //     }
+  //   }
+  // };
 
   const getUserById = async () => {
     try {
@@ -149,9 +153,8 @@ export default function NavSecondary({ shipping, success }) {
   };
 
   useEffect(() => {
-    getUserById(userRedux?._id);
+    getUserById(userRedux?._id); // eslint-disable-next-line
   }, [userRedux]);
-
 
   const renderMenu = (
     <Menu
@@ -163,24 +166,20 @@ export default function NavSecondary({ shipping, success }) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-
       {userDb && userDb.isAdmin && (
         <Link to="/adminpanel" className={classes.link}>
           <MenuItem>Administrar</MenuItem>
         </Link>
-      )
-      }
+      )}
 
-      {
-        userDb && (
-          <Link to="/userprofile" className={classes.link}>
-            <MenuItem>Perfil</MenuItem>
-          </Link>
-        )
-      }
+      {userDb && (
+        <Link to="/userprofile" className={classes.link}>
+          <MenuItem>Perfil</MenuItem>
+        </Link>
+      )}
 
       <LoginLogout />
-    </Menu >
+    </Menu>
   );
 
   const mobileMenuId = "primary-search-account-menu-mobile";
@@ -225,20 +224,38 @@ export default function NavSecondary({ shipping, success }) {
   );
 
   return (
-    <AppBar style={{
-      position: "relative",
-      backgroundColor: "rgb(0, 23, 20)",
-      width: "100%",
-    }}>
+    <AppBar
+      style={{
+        position: "relative",
+        backgroundColor: "rgb(0, 23, 20)",
+        width: "100%",
+      }}
+    >
       <Toolbar className={classes.navDisplay}>
         {/* Propuesta de logo 1 */}
         {/* <Link to="/" style={{ margin: '1vh' }}>
           <img src={logo} className={classes.logo} />
         </Link> */}
         {/* Propuesta de logo 2 */}
-        <Link to="/" style={{ margin: '1vh', textDecoration: "none" }}>
+        {/* <Link to="/" style={{ margin: "1vh", textDecoration: "none" }}>
           {<Typography className={classes.logo}>AmadeuS </Typography>}
-        </Link>
+        </Link> */}
+        <Link
+            to="/"
+            style={{ margin: "1vh", textDecoration: "none", display: "flex" }}
+          >
+            <>
+              <img src={logo} alt="logo" className={classes.logoImage} />
+              <Typography
+                variant="h1"
+                color="white"
+                component="h1"
+                className={classes.logo}
+              >
+                AmadeuS{" "}
+              </Typography>
+            </>
+          </Link>
         {/* {
           success === "approved" &&
           <Box style={{ marginLeft: '30%', width: '90%' }}>
@@ -256,12 +273,13 @@ export default function NavSecondary({ shipping, success }) {
         >
           Home
         </Button> */}
-        <Link to="/" style={{ margin: '1vh', textDecoration: "none" }}>
+        <Link to="/" style={{ margin: "1vh", textDecoration: "none" }}>
           <Button
-            component={Link} to='/'
+            component={Link}
+            to="/"
             endIcon={<HomeRounded />}
             variant="text"
-            style={{color: "white", fontSize: "vh"}}
+            style={{ color: "white", fontSize: "vh" }}
             size="large"
           >
             HOME
@@ -294,9 +312,7 @@ export default function NavSecondary({ shipping, success }) {
 
         <div className={classes.sectionDesktop}>
           <Container className={classes.user}>
-
-
-            <OnlyLogin />
+            {/* <OnlyLogin /> */}
 
             {userDb && (
               <Typography
@@ -304,7 +320,7 @@ export default function NavSecondary({ shipping, success }) {
                 variant="body2"
                 className={classes.welcome}
               >
-                {userDb.nickname}
+                {userDb.name}
               </Typography>
             )}
 
@@ -316,13 +332,14 @@ export default function NavSecondary({ shipping, success }) {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              {userDb ? (
-                <img src={userDb.picture} className={classes.avatar} />
-              ) : (
-                <AccountCircle />
+              {isAuthenticated && userDb && (
+                <img
+                  src={userDb.picture}
+                  className={classes.avatar}
+                  alt="avatar"
+                />
               )}
             </IconButton>
-
           </Container>
         </div>
 
@@ -330,6 +347,5 @@ export default function NavSecondary({ shipping, success }) {
         {renderMenu}
       </Toolbar>
     </AppBar>
-  )
+  );
 }
-

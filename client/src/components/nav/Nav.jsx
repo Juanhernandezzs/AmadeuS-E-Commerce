@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { alpha, makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import {
   AppBar,
   Toolbar,
@@ -11,20 +11,21 @@ import {
   Badge,
   MenuItem,
   Menu,
-  Box,
   Container,
-  CssBaseline,
 } from "@material-ui/core";
-import { LocationOn, ShoppingCart, AccountCircle, Favorite, Mail } from "@material-ui/icons";
+import {
+  ShoppingCart,
+  AccountCircle,
+  Favorite,
+  Mail,
+} from "@material-ui/icons";
 import SearchBar from "../searchbar/SearchBar";
 import { useAuth0 } from "@auth0/auth0-react";
-import { UserContext } from "../shoppingcart/UserContext";
 import LoginLogout from "../account/LoginLogout";
 import OnlyLogin from "../account/OnlyLogin";
-import logo from '../../img/logo_ecommerce.jpg';
-import axios from 'axios';
-import { headers } from "../../utils/GetHeaders"
-import { getUserById, saveUser } from "../../redux/actions/users";
+// import logo from "../../img/logo_ecommerce.jpg";
+import logo from "./logo.jpg";
+import axios from "axios";
 
 const { REACT_APP_SERVER } = process.env;
 
@@ -96,12 +97,12 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "space-between",
   },
   logo: {
-    fontFamily: "Abadi MT Condensed Light",
+    // fontFamily: "Abadi MT Condensed Light",
+    marginLeft: "10px",
     fontSize: "40px",
     color: "white",
     // textDecoration: "underline white"
-    textDecoration: "none"
-
+    textDecoration: "none",
   },
   avatar: {
     width: "2vw",
@@ -112,7 +113,9 @@ const useStyles = makeStyles((theme) => ({
   // fontSize: "70%",
   welcome: {
     // marginTop: "2vh",
-    color: theme.palette.primary.light
+    color: theme.palette.primary.light,
+    // width: "10vw",
+    whiteSpace: "nowrap",
   },
   text: {
     color: theme.palette.primary.light,
@@ -123,9 +126,12 @@ const useStyles = makeStyles((theme) => ({
   user: {
     display: "flex",
     alignItems: "center",
-    justifyContent: "space-between",
-  }
-
+    textAlign: "center",
+  },
+  logoImage: {
+    maxHeight: "50px",
+    maxWidth: "50px",
+  },
 }));
 
 export default function Nav() {
@@ -134,17 +140,12 @@ export default function Nav() {
   const shoppingCartProducts = useSelector((state) => state.cart.cart);
 
   const [userDb, setUserDb] = useState();
-  console.log(userDb);
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
   const favorites = useSelector(({ app }) => app.favorites);
 
-  const users = useSelector(({ app }) => app.usersLoaded);
-  const { isAuthenticated, user, isLoading } = useAuth0();
-
-  const dispatch = useDispatch();
-
+  const { isAuthenticated, user } = useAuth0();
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -160,28 +161,25 @@ export default function Nav() {
     setAnchorEl(null);
     handleMobileMenuClose();
   };
-
-  const { shoppingCart } = useContext(UserContext);
-  const { cartQuantity } = shoppingCart;
   const menuId = "primary-search-account-menu";
 
-  const adminAuth = function () {
-    let usersAdmin = [];
-    if (!isLoading) {
-      if (user) {
-        users.forEach((u) => {
-          u.isAdmin === true && usersAdmin.push(u.email);
-        });
-        // return user.email && usersAdmin.includes(user.email) ? true : false;
-        return (user.email && user.email === "crismaxbar@gmail.com") ||
-          user.email === "heisjuanpablo@gmail.com" ||
-          user.email === "leandrobuzeta@gmail.com" ||
-          user.email === "juanmhdz99@gmail.com"
-          ? true
-          : false;
-      }
-    }
-  };
+  // const adminAuth = function () {
+  //   let usersAdmin = [];
+  //   if (!isLoading) {
+  //     if (user) {
+  //       users.forEach((u) => {
+  //         u.isAdmin === true && usersAdmin.push(u.email);
+  //       });
+  //       // return user.email && usersAdmin.includes(user.email) ? true : false;
+  //       return (user.email && user.email === "crismaxbar@gmail.com") ||
+  //         user.email === "heisjuanpablo@gmail.com" ||
+  //         user.email === "leandrobuzeta@gmail.com" ||
+  //         user.email === "juanmhdz99@gmail.com"
+  //         ? true
+  //         : false;
+  //     }
+  //   }
+  // };
 
   const getUserById = async () => {
     try {
@@ -195,9 +193,8 @@ export default function Nav() {
   };
 
   useEffect(() => {
-    getUserById(userRedux?._id);
+    getUserById(userRedux?._id); // eslint-disable-next-line
   }, [userRedux]);
-
 
   const renderMenu = (
     <Menu
@@ -209,7 +206,6 @@ export default function Nav() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-
       {userDb && (
         <Link to="/userprofile" className={classes.link}>
           <MenuItem>Perfil</MenuItem>
@@ -280,43 +276,54 @@ export default function Nav() {
         }}
       >
         <Toolbar className={classes.navDisplay}>
-          <Link to="/" style={{ margin: '1vh', textDecoration: "none" }}>
-            {<Typography className={classes.logo}>AmadeuS </Typography>}
+          <Link
+            to="/"
+            style={{ margin: "1vh", textDecoration: "none", display: "flex" }}
+          >
+            <>
+              <img src={logo} alt="logo" className={classes.logoImage} />
+              <Typography
+                variant="h1"
+                color="white"
+                component="h1"
+                className={classes.logo}
+              >
+                AmadeuS{" "}
+              </Typography>
+            </>
           </Link>
 
           <SearchBar />
 
           <div className={classes.sectionDesktop}>
-
             <Container className={classes.user}>
-
               <OnlyLogin />
-
               {userDb && (
                 <Typography
                   component="p"
                   variant="body2"
                   className={classes.welcome}
                 >
-                  {userDb.nickname}
+                  {userDb.name}
                 </Typography>
               )}
 
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={userDb && handleProfileMenuOpen}
-                color="inherit"
-              >
-                {userDb ? (
-                  <img src={userDb.picture} className={classes.avatar} />
-                ) : (
-                  <AccountCircle />
-                )}
-              </IconButton>
-
+              {isAuthenticated && userDb && (
+                <IconButton
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                >
+                  <img
+                    src={userDb.picture}
+                    className={classes.avatar}
+                    alt="avatar"
+                  />
+                </IconButton>
+              )}
             </Container>
 
             <IconButton
@@ -325,7 +332,13 @@ export default function Nav() {
               component={Link}
               to="/cart"
             >
-              <Badge badgeContent={shoppingCartProducts?.reduce((acc, item) => (acc + item.quantity), 0)} color="secondary">
+              <Badge
+                badgeContent={shoppingCartProducts?.reduce(
+                  (acc, item) => acc + item.quantity,
+                  0
+                )}
+                color="secondary"
+              >
                 <ShoppingCart />
               </Badge>
             </IconButton>
@@ -338,14 +351,17 @@ export default function Nav() {
             >
               <Badge
                 badgeContent={
-                  user ? (favorites?.length > 0 ? favorites.length : null) : null
+                  user
+                    ? favorites?.length > 0
+                      ? favorites.length
+                      : null
+                    : null
                 }
                 color="secondary"
               >
                 <Favorite />
               </Badge>
             </IconButton>
-
           </div>
         </Toolbar>
         {/* <div style={{display:'flex', justifyContent:'flex-end', marginRight:'2vw'}}>

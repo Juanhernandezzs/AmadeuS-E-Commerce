@@ -9,9 +9,6 @@ import {
   IconButton,
   Typography,
   Divider,
-  Modal,
-  Container,
-  Backdrop,
   Box,
 } from "@material-ui/core";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
@@ -37,12 +34,11 @@ import {
   removeAllFavorites,
 } from "../../redux/actions/favorites";
 import { useAuth0 } from "@auth0/auth0-react";
-const REACT_APP_SERVER = process.env;
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    height: '67vh',
-    width: '40vh', // Para que las cards tengan el mismo ancho sin importar el tamaño de la imagen
+    // height: "67vh",
+    // width: "40vh", // Para que las cards tengan el mismo ancho sin importar el tamaño de la imagen
     boxShadow: "0 8px 40px -12px rgba(0,0,0,0.3)",
 
     "&:hover": {
@@ -51,11 +47,17 @@ const useStyles = makeStyles((theme) => ({
     // marginRight: "2vh",
     // marginBottom:"2vh"
     margin: "2vh",
-    [theme.breakpoints.down('sm')]: {
-      width: '50vh',
-      height: '75vh'
-    },
-  
+    // [theme.breakpoints.between("xl","lg")]: {
+    //   height: "67vh",
+    // },
+    // [theme.breakpoints.down("lg")]: {
+    //   // 1200px
+    //   height: "61vh",
+    // },
+    // [theme.breakpoints.up("xl")]: {
+    //   // 1536px
+    //   height: "57vh",
+    // },
   },
   media: {
     width: "100%",
@@ -120,18 +122,17 @@ const useStyles = makeStyles((theme) => ({
   shareIcon: {
     width: "4vh",
     height: "4vh",
-    
   },
 }));
 
 export default function ProductCard(product) {
   const { id, name, price, image, stock } = product;
   //recibe de Products las props
-  const cartState = useSelector(state => state.cart.cart);
+  const cartState = useSelector((state) => state.cart.cart);
 
   const classes = useStyles();
   const { shoppingCart, setShoppingCart } = useContext(UserContext);
-  const { cartQuantity, cartItems } = shoppingCart;
+  const { cartQuantity } = shoppingCart;
   const [shareOpen, setShareOpen] = useState(false);
   const dispatch = useDispatch();
   const favorites = useSelector(({ app }) => app.favorites);
@@ -148,8 +149,6 @@ export default function ProductCard(product) {
     }));
     dispatch(addToCart(id));
   };
-
-  const alStorage = JSON.stringify(cartState);
 
   useEffect(() => {
     window.localStorage.setItem("cant", JSON.stringify(cartQuantity));
@@ -185,7 +184,6 @@ export default function ProductCard(product) {
   const handleShare = () => {
     setShareOpen(!shareOpen);
   };
-  const handleClose = () => setShareOpen(false);
 
   return (
     <Card className={classes.root}>
@@ -195,8 +193,17 @@ export default function ProductCard(product) {
           <Typography component="h1" className={classes.price}>
             $ {numberWithCommas(price)}
           </Typography>
-          <Typography variant="body2" component="h3">
-            {name.substring(0, 25) + "..."}
+          <Typography
+            variant="body2"
+            component="h3"
+            style={{
+              textOverflow: "ellipsis",
+              width: "175px",
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+            }}
+          >
+            {name}
           </Typography>
           {stock <= 0 ? (
             <Typography variant="body2" color="error" component="p">
@@ -218,7 +225,7 @@ export default function ProductCard(product) {
             justifyContent: "space-evenly",
             width: "15vh",
             marginTop: "-4.5vh",
-            marginLeft: "25vh",
+            paddingLeft: "22vh",
           }}
         >
           <EmailShareButton
@@ -247,21 +254,30 @@ export default function ProductCard(product) {
         {favorites?.forEach((favorite) => {
           if (favorite._id === id) flag = true;
         })}
-        <IconButton aria-label="add to favorites" onClick={favoritesButton}>
-          <FavoriteIcon
-            className={
-              user ? (flag ? classes.iconFavorite : classes.icon) : classes.icon
-            }
-          />
-        </IconButton>
-        <IconButton aria-label="share" onClick={handleShare}>
-          <ShareIcon className={classes.icon} />
-        </IconButton>
+        <div>
+          <IconButton aria-label="add to favorites" onClick={favoritesButton}>
+            <FavoriteIcon
+              className={
+                user
+                  ? flag
+                    ? classes.iconFavorite
+                    : classes.icon
+                  : classes.icon
+              }
+            />
+          </IconButton>
+          <IconButton aria-label="share" onClick={handleShare}>
+            <ShareIcon className={classes.icon} />
+          </IconButton>
+        </div>
 
         <Button
           variant="contained"
           className={classes.button}
-          disabled={stock <= 0 || cartState?.find( e => e._id===id)?.quantity===stock}
+          disabled={
+            stock <= 0 ||
+            cartState?.find((e) => e._id === id)?.quantity === stock
+          }
           onClick={agregar}
           endIcon={<ShoppingCartIcon />}
         >
