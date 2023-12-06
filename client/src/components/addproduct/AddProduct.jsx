@@ -21,15 +21,13 @@ import {
   Modal,
   Fade,
   Backdrop,
-  CssBaseline,
   Fab,
+  Container,
 } from "@material-ui/core";
 import { getAllCategories } from "../../redux/actions/getAllCategories";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { getDetails } from "../../redux/actions/getDetails";
 import { useParams } from "react-router";
-import { numberWithCommas } from "../../utils";
 import NavSecondary from "./../navsecondary/NavSecondary";
 import AddPhotoAlternateIcon from "@material-ui/icons/AddPhotoAlternate";
 const { REACT_APP_SERVER } = process.env;
@@ -38,7 +36,8 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     width: "60vh",
     height: "80%",
-    margin: "2%",
+    marginTop: "2%",
+    marginBottom: "2%",
     padding: "3vh",
     border: `3px solid ${theme.palette.primary.dark}`,
     borderRadius: "2vh",
@@ -49,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.primary.light,
     },
-    width: "29.5vh",
+    width: "100%",
   },
   btnPublicar: {
     backgroundColor: theme.palette.primary.main,
@@ -57,11 +56,20 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.primary.light,
     },
-    marginTop: "10vh",
+    marginTop: "5vh",
+    width: "40%",
+    alignSelf: "center",
   },
   link: {
     textDecoration: "none",
     color: theme.palette.primary.contrastText,
+    width: "40%",
+  },
+  linkBtn: {
+    display: "flex",
+    width: "100%",
+    padding: "0",
+    justifyContent: "space-around",
   },
   field: {
     marginTop: "1vh",
@@ -79,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundSize: "larger",
     },
+    marginLeft: "5vh",
   },
   container: {
     width: "80vh",
@@ -99,6 +108,7 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "2vh",
     marginRight: "4vh",
     marginLeft: "4vh",
+    whiteSpace: "nowrap",
   },
   root: {
     "& > *": {
@@ -128,17 +138,16 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: theme.palette.primary.light,
     },
-    marginTop: "1vh",
+    marginBottom: "2vh",
   },
   descError: {
-    marginTop: "10vh",
+    marginTop: "5vh",
   },
 }));
 
 function AddProduct() {
   const classes = useStyles();
   const [val, setVal] = useState([]);
-  const [selectedFile, setSelectedFile] = useState(null);
   const initialInput = {
     name: "",
     price: "",
@@ -151,7 +160,6 @@ function AddProduct() {
   const [input, setInput] = useState(initialInput);
   const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
-  // const { data, loading, success } = useSelector(({ app }) => app.detail);
   const categories = useSelector(({ app }) => app.categoriesLoaded);
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -169,7 +177,7 @@ function AddProduct() {
     dispatch(getAllCategories());
     if (id) {
       getProductById(id);
-    }
+    } // eslint-disable-next-line
   }, [dispatch]);
 
   const handleInputChange = (e) => {
@@ -239,7 +247,7 @@ function AddProduct() {
   }
 
   useEffect(() => {
-    validate();
+    validate(); // eslint-disable-next-line
   }, [input]);
 
   useEffect(() => {
@@ -273,7 +281,12 @@ function AddProduct() {
 
       <Grid
         container
-        style={{ marginTop: "10vh", marginLeft: "2%", overflowX: "hidden" }}
+        style={{
+          marginTop: "10vh",
+          paddingLeft: "2%",
+          paddingRight: "2%",
+          paddingBottom: "2%",
+        }}
       >
         <Grid item xs={6}>
           <Typography variant="h5" color="primary">
@@ -288,7 +301,6 @@ function AddProduct() {
                 className={classes.field}
                 inputProps={{ className: classes.text }}
                 InputLabelProps={{ className: classes.text }}
-                required
                 name="name"
                 value={input.name}
                 label="Producto"
@@ -303,7 +315,6 @@ function AddProduct() {
               <Input
                 type="file"
                 id="contained-button-file"
-                required
                 className={classes.uploadInput}
                 onChange={(e) => handleUpload(e.target.files[0])}
               />
@@ -312,18 +323,6 @@ function AddProduct() {
                   <AddPhotoAlternateIcon />
                 </Fab>
               </label>
-              {/* <TextField
-                className={classes.field}
-                required
-                inputProps={{ className: classes.text }}
-                InputLabelProps={{ className: classes.text }}
-                name="image"
-                value={input.image}
-                label="Imagen URL"
-                variant="outlined"
-                onChange={handleInputChange}
-              />
-              */}
               {errors.image && (
                 <FormHelperText error id="component-error">
                   {errors.image}
@@ -333,7 +332,6 @@ function AddProduct() {
                 className={classes.field}
                 inputProps={{ className: classes.text }}
                 InputLabelProps={{ className: classes.text }}
-                required
                 name="price"
                 value={input.price}
                 label="Precio"
@@ -350,7 +348,6 @@ function AddProduct() {
                 className={classes.field}
                 inputProps={{ className: classes.text }}
                 InputLabelProps={{ className: classes.text }}
-                required
                 name="brand"
                 value={input.brand}
                 label="Marca"
@@ -366,7 +363,6 @@ function AddProduct() {
                 className={classes.field}
                 inputProps={{ className: classes.text }}
                 InputLabelProps={{ className: classes.text }}
-                required
                 name="stock"
                 value={input.stock}
                 label="Unidades disponibles"
@@ -470,26 +466,40 @@ function AddProduct() {
                   marginTop: "1vh",
                 }}
               >
-                <Link to="/" className={classes.link}>
-                  <Button variant="contained" className={classes.btnBack}>
-                    Home
-                  </Button>
-                </Link>
-                <Link to="/adminpanel" className={classes.link}>
-                  <Button variant="contained" className={classes.btnBack}>
-                    Volver
-                  </Button>
-                </Link>
+                <Container className={classes.linkBtn}>
+                  <Link to="/" className={classes.link}>
+                    <Button variant="contained" className={classes.btnBack}>
+                      Home
+                    </Button>
+                  </Link>
+                  <Link to="/adminpanel" className={classes.link}>
+                    <Button variant="contained" className={classes.btnBack}>
+                      Volver
+                    </Button>
+                  </Link>
+                </Container>
               </div>
             </FormControl>
           </form>
         </Grid>
 
-        <Grid item xs={6} style={{ marginRight: "0%" }}>
+        <Grid
+          item
+          xs={6}
+          style={{
+            marginRight: "0%",
+            border: "2px solid #000",
+            borderRadius: "2vh",
+          }}
+        >
           <Grid item xs={6}>
             <CardMedia
               className={classes.media}
-              image={`${REACT_APP_SERVER}/products/images/${input.image}`}
+              image={
+                input.image
+                  ? `${REACT_APP_SERVER}/products/images/${input.image}`
+                  : "https://t4.ftcdn.net/jpg/04/73/25/49/360_F_473254957_bxG9yf4ly7OBO5I0O5KABlN930GwaMQz.jpg"
+              }
             />
           </Grid>
           <Grid item xs={6}>
@@ -498,7 +508,7 @@ function AddProduct() {
               variant="h4"
               className={classes.container}
             >
-              {input.name}
+              {input.name || "Nombre"}
               <Divider variant="middle" light />
             </Typography>
             <Typography
@@ -506,7 +516,7 @@ function AddProduct() {
               component="h2"
               className={classes.container}
             >
-              ${input.price}
+              ${input.price || 0}
               <Divider />
             </Typography>
             <Typography
@@ -514,7 +524,7 @@ function AddProduct() {
               variant="body2"
               className={classes.container}
             >
-              {input.description}
+              {input.description || "Descripción"}
             </Typography>
             <Grid
               style={{
@@ -528,13 +538,14 @@ function AddProduct() {
                 <img
                   src={"https://img.icons8.com/color/480/mercado-pago.png"}
                   className={classes.mp}
+                  alt="mercadopago"
                 />
               </Box>
               <Button variant="contained" className={classes.button}>
-                Add to Cart
+                Agregar
               </Button>
               <Button variant="contained" className={classes.button}>
-                Buy
+                Comprar
               </Button>
             </Grid>
             <Typography
@@ -542,7 +553,7 @@ function AddProduct() {
               component="h3"
               className={classes.container}
             >
-              Stock: {input.stock} {input.brand}
+              Stock: {input.stock || 0} Marca: {input.brand}
             </Typography>
           </Grid>
         </Grid>

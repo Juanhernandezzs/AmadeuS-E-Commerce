@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       boxShadow: "0 10px 40px 0px rgba(0,117,49,0.3)",
     },
-    margin: "3vh",
+    margin: "1vh",
   },
   media: {
     width: "100%",
@@ -143,7 +143,7 @@ function Stock() {
   }
 
   useEffect(() => {
-    dispatch(filterByCategory(select.filter));
+    dispatch(filterByCategory(select.filter)); // eslint-disable-next-line
   }, [select.filter]);
 
   useEffect(() => {
@@ -160,6 +160,10 @@ function Stock() {
     dispatch(getAllProducts());
   };
 
+  const setProducts = (e) => {
+    setProductsPerPage(e.target.value);
+  };
+
   return (
     <>
       <NavSecondary />
@@ -173,7 +177,7 @@ function Stock() {
           </div>
         )}
         {!loading && success && (
-          <div style={{ marginTop: "13vh" }}>
+          <div style={{ marginTop: "5vh" }}>
             <Grid
               container
               direction="row"
@@ -215,8 +219,22 @@ function Stock() {
                   value={select.price}
                   onChange={(e) => handleSortPrice(e)}
                 >
-                  <MenuItem value="Lower to Higher">Lower to Higher</MenuItem>
-                  <MenuItem value="Higher to Lower">Higher to Lower</MenuItem>
+                  <MenuItem value="Lower to Higher">Menor a Mayor</MenuItem>
+                  <MenuItem value="Higher to Lower">Mayor a Menor</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl className={classes.formControl}>
+                <InputLabel className={classes.label}>Mostrar:</InputLabel>
+                <Select
+                  value={productsPerPage}
+                  onChange={(e) => setProducts(e)}
+                >
+                  <MenuItem value={6}>6</MenuItem>
+                  <MenuItem value={9}>9</MenuItem>
+                  <MenuItem value={12}>12</MenuItem>
+                  <MenuItem value={15}>15</MenuItem>
+                  <MenuItem value={18}>18</MenuItem>
                 </Select>
               </FormControl>
 
