@@ -10,18 +10,19 @@ function GetHeaders() {
   const userDB = useSelector((state) => state.app.user);
   const dispatch = useDispatch();
 
-  useEffect(async () => {
-    console.log('user', user)
-    if (isAuthenticated && !userDB) {
-      const token = await getAccessTokenSilently();
+  useEffect(() => {
+    async function getToken() {
+      if (isAuthenticated && !userDB) {
+        const token = await getAccessTokenSilently();
+        let headers = {
+          authorization: `Bearer ${token}`,
+          email: user.email,
+        };
 
-      let headers = {
-        authorization: `Bearer ${token}`,
-        email: user.email,
-      };
-
-      dispatch(saveUser(user, headers));
+        dispatch(saveUser(user, headers));
+      }
     }
+    getToken(); // eslint-disable-next-line
   }, [isAuthenticated]);
 
   if (user) {
@@ -36,7 +37,7 @@ function GetHeaders() {
     setHeaders();
   }
 
-  return <></>
+  return <></>;
 }
 
 export default GetHeaders;

@@ -6,28 +6,27 @@ import { linkUserCart } from "../../redux/actions/linkUserCart";
 import { cleanUser } from "../../redux/actions/users";
 import { clearApp } from "../../redux/actions/clearApp";
 
-
 export default function LoginLogout() {
-  const { isAuthenticated, loginWithRedirect, logout, user } = useAuth0();
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const userDB = useSelector((state) => state.app.user);
-  const shoppingCartin = useSelector(state => state.cart.cart)
+  const shoppingCartin = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
 
   const handleChangeLogout = () => {
     logout();
     const userCartToDb = {
       user: userDB,
-      cart: shoppingCartin
-    }
-    dispatch( linkUserCart( userCartToDb ))
+      cart: shoppingCartin,
+    };
+    dispatch(linkUserCart(userCartToDb));
     dispatch(cleanUser());
-    dispatch( cleanCart() )
+    dispatch(cleanCart());
     dispatch(clearApp());
   };
 
   return (
     <div>
-      {isAuthenticated  && userDB  ? (
+      {isAuthenticated && userDB ? (
         <MenuItem onClick={handleChangeLogout}>Salir</MenuItem>
       ) : (
         <MenuItem onClick={loginWithRedirect}>Ingresá</MenuItem>

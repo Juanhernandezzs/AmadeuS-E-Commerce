@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import axios from "axios"
-const { REACT_APP_SERVER, REACT_APP_AUTH0_DOMAIN, REACT_APP_AUTH0_AUDIENCE } = process.env;
+import axios from "axios";
 
 const Profile = () => {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -9,30 +8,29 @@ const Profile = () => {
 
   useEffect(() => {
     const getUserMetadata = async () => {
-      const domain = "api.musical.ecommerce";
-  
+      // const domain = "api.musical.ecommerce";
+      const domain = 'amadeus.api'
+
       try {
         const accessToken = await getAccessTokenSilently({
           audience: `http://${domain}/api/v2/`,
           scope: "read:current_user",
         });
-  
+
         const userDetailsByIdUrl = `http://${domain}/api/v2/users/${user.sub}`;
-  
+
         const metadataResponse = await axios.get(userDetailsByIdUrl, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
-  
-        // const { user_metadata } = await metadataResponse.json();
-  
+
         setUserMetadata(metadataResponse.data);
       } catch (e) {
         console.log(e.message);
       }
     };
-  
+
     getUserMetadata();
   }, [getAccessTokenSilently, user?.sub]);
 

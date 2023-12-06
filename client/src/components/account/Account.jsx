@@ -5,15 +5,17 @@ import axios from "axios";
 const { REACT_APP_SERVER } = process.env;
 
 export default function Account() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
-
+  const { isAuthenticated, getAccessTokenSilently, user } = useAuth0();
+  console.log("user", user);
+  console.log("test", isAuthenticated);
   const entrarConToken = async () => {
     try {
+      console.log("click");
       const token = isAuthenticated && (await getAccessTokenSilently());
       console.log("token", token);
 
       const headers = {
-        authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       };
 
       const response = await axios.get(REACT_APP_SERVER + "/auth", { headers });
