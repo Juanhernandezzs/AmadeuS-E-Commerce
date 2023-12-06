@@ -1,6 +1,5 @@
 const server = require("./src/app.js");
 const connectionDB = require("./src/config/db.js");
-const express = require("express");
 
 // Conexión a DB
 connectionDB();

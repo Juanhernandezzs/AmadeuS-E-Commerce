@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
-const Product = require('../models/Product');
-const { body, validationResult } = require("express-validator");
 const { transporter, emailer, emailOrder } = require('../config/email')
 const { jwtCheck, getManagementApiJwt } = require("../config/auth");
 
+const { AUTH0_DOMAIN } = process.env
 
 router.post(
   "/", jwtCheck,
@@ -25,7 +24,6 @@ router.post(
           path: 'orders',
           populate: { path: 'products' }
         })
-      //.populate("orders");
 
       if (foundUser) {
         res.json(foundUser);
@@ -71,7 +69,6 @@ router.delete("/:id", jwtCheck, async (req, res, next) => {
 });
 
 router.put("/:id", jwtCheck, async (req, res, next) => {
-  // const { name, surname, password, email, phone} = req.body;
   const { id } = req.params;
   try {
     const modifiedUser = await User.findByIdAndUpdate(id, req.body, {
@@ -83,7 +80,6 @@ router.put("/:id", jwtCheck, async (req, res, next) => {
         path: 'orders',
         populate: { path: 'products' }
       })
-    //res.json(updatedCategory)
     console.log('modificado', modifiedUser)
     res.send(modifiedUser);
   } catch (err) {
@@ -117,7 +113,7 @@ router.get("/:id",/*  jwtCheck,  */async (req, res, next) => {
         populate: { path: 'products' }
       })
       .populate("favorites");
-      
+
     res.send(user);
   } catch (err) {
     next(err);
@@ -141,11 +137,8 @@ router.post("/cart",/*  jwtCheck, */ async (req, res, next) => {
       newUser.cart = cart
       const savedUser = await newUser.save();
     } else {
-      //userCart = await User.updateOne({_id: foundUser._id}, { $push: { cart: cart } })
-      //userCart = await User.updateOne({_id: foundUser._id}, { $addToSet: { cart: cart } })
       userCart = await User.updateOne({ _id: foundUser._id }, { $set: { cart: cart } })
     }
-
     res.send('Se modifico el carrito')
   }
   catch (err) {
@@ -265,7 +258,7 @@ router.post("/:idUser/shipping", jwtCheck, async (req, res, next) => {
   try {
     userShipping = await User.updateOne(
       { _id: idUser },
-      { $addToSet: { shipping : shipping } }
+      { $addToSet: { shipping: shipping } }
     );
     res.send(userShipping);
   } catch (err) {
@@ -301,7 +294,7 @@ router.get("/block/:userSub", jwtCheck, function (req, res) {
       const token = data.access_token;
       var options = {
         method: "PATCH",
-        url: "https://dev-0-knpzfi.us.auth0.com/api/v2/users/" + userSub,
+        url: `https://${AUTH0_DOMAIN}/api/v2/users/${userSub}`,
         headers: {
           "authorization": "Bearer " + token,
           "content-type": "application/json",
@@ -317,7 +310,7 @@ router.get("/block/:userSub", jwtCheck, function (req, res) {
         res.json(body);
       });
     });
-  
+
 });
 
 router.get("/desblock/:userSub", jwtCheck, function (req, res) {
@@ -332,7 +325,7 @@ router.get("/desblock/:userSub", jwtCheck, function (req, res) {
       const token = data.access_token;
       var options = {
         method: "PATCH",
-        url: "https://dev-0-knpzfi.us.auth0.com/api/v2/users/" + userSub,
+        url: `https://${AUTH0_DOMAIN}/api/v2/users/${userSub}`,
         headers: {
           "authorization": "Bearer " + token,
           "content-type": "application/json",
@@ -348,7 +341,7 @@ router.get("/desblock/:userSub", jwtCheck, function (req, res) {
         res.json(body);
       });
     });
-  
+
 });
 
 module.exports = router;
