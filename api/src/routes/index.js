@@ -18,7 +18,6 @@ router.use('/mercadopago', mercadopago)
 router.use('/orders', orders)
 router.use('/auth', authentication)
 router.use('/reviews', reviews)
-router.use('/', products)
 
 module.exports = router;
 
