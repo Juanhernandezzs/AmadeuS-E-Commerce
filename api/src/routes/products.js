@@ -31,7 +31,6 @@ router.post('/images', upload.single('file'), (req, res) => {
 })
 
 router.get('/images/:filename', (req,res) =>{
-    console.log(__dirname)
     res.sendFile(`uploads/products/${req.params.filename}`, {
         root: path.resolve(__dirname, '../..')
     })
@@ -79,13 +78,11 @@ router.post('/precarga', async (req, res, next) => {
                 image: e.image,
                 qualification: e.qualification,
             })
-            console.log('product', product)
 
             const foundCategories = await Category.find({ name: { $in: e.categories } })
             product.categories = foundCategories.map(category => category._id)
 
             const savedProduct = await product.save();
-            console.log(savedProduct)
         })
         res.send('Preload successful.')
     } catch (err) {
@@ -125,7 +122,6 @@ router.post('/',
             product.categories = foundCategories.map(category => category._id)
 
             const savedProduct = await product.save();
-            console.log(savedProduct)
             res.status(200).send('The product has been created successfully.')
         } catch (err) {
             next(err)

@@ -8,7 +8,6 @@ const {transporter, emailer } = require('../config/email')
 
 router.post('/', async (req, res, next) => {
   const { buyer, phone, products, shipping, payment, date, user, cost, quantity } = req.body;
-  console.log('products', products)
   try {
     const newOrder = new Order({
       phone,
@@ -43,7 +42,6 @@ router.post('/', async (req, res, next) => {
       const savedOrder = await newOrder.save();
       userOrder = await User.updateOne({ email: user.email }, { $addToSet: { orders: [savedOrder] } })
       userShipping = await User.updateOne({ email: user.email }, { $addToSet: { shipping: savedOrder.shipping } })
-      console.log('este es el id de la orden ' + savedOrder._id)
       return res.status(200).send(savedOrder)
     }
     return res.status(404).send('Error: the order has not been created.')

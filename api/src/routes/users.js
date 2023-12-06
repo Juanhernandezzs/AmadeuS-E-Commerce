@@ -210,7 +210,6 @@ router.get("/:idUser/favorites", /* jwtCheck, */ async (req, res, next) => {
 
   try {
     let user = await User.findOne({ _id: idUser }).populate("favorites");
-    // console.log('user en get favorites', user)
     if (user.favorites.length) {
       res.json(user.favorites);
     } else {
@@ -290,7 +289,6 @@ router.get("/block/:userSub", jwtCheck, function (req, res) {
 
   getManagementApiJwt()
     .then((data) => {
-      console.log('data', data)
       const token = data.access_token;
       var options = {
         method: "PATCH",
@@ -321,7 +319,6 @@ router.get("/desblock/:userSub", jwtCheck, function (req, res) {
 
   getManagementApiJwt()
     .then((data) => {
-      console.log('data', data)
       const token = data.access_token;
       var options = {
         method: "PATCH",

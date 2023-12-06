@@ -38,7 +38,6 @@ router.post('/', /*jwtCheck,*/
     try {
         let categories = await Category.find({ name: name });
         if (categories.length) {
-            console.log(categories)
         res.status(404).send('The category is already created')
     } else {
         const errors = validationResult(req);

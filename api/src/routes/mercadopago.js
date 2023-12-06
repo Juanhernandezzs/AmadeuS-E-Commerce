@@ -36,7 +36,6 @@ router.post('/checkout', (req, res) => {
     mercadopago.preferences.create(preference)
 		.then(function (response) {
 			//trabajar con la respuesta de MP
-            // console.log(response.body)
             global.id = response.body.id;
             res.send(response.body.init_point)
 		}).catch(function (error) {
@@ -53,8 +52,6 @@ router.post('/cart', (req, res) => {
 					unit_price: Number(item.price),
 					quantity: Number(item.quantity), 
 	}))
-	
-	console.log('arreglo que viene por body', req.body)
 	
 		let preference = {
 			
@@ -74,7 +71,6 @@ router.post('/cart', (req, res) => {
 		mercadopago.preferences.create(preference)
 			.then(function (response) {
 				//trabajar con la respuesta de MP
-				// console.log(response.body)
 				global.id = response.body.id;
 				res.send(response.body.init_point)
 			}).catch(function (error) {
@@ -85,7 +81,6 @@ router.post('/cart', (req, res) => {
 
 router.get('/feedback' , ( req, res) => {
     const {payment_id, status, merchant_order_id} = req.query
-    // console.log(req.query)
     res.send({
 		Payment: req.query.payment_id,
 		Status: req.query.status,
