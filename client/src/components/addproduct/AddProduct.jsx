@@ -198,7 +198,6 @@ function AddProduct() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      console.log(input);
       if (input._id) {
         axios.put(`${REACT_APP_SERVER}/products/${input._id}`, input);
         setOpen(true);
@@ -262,12 +261,10 @@ function AddProduct() {
     const formData = new FormData();
     if (file) {
       formData.append("file", file, `asd.${file?.type.replace(/(.*)\//g, "")}`);
-      console.log("file", formData, file);
       const image = await axios.post(
         `${REACT_APP_SERVER}/products/images`,
         formData
       );
-      console.log(image.data);
       setInput({
         ...input,
         image: image.data,
