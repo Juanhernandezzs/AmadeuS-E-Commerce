@@ -11,8 +11,7 @@
   "license": "ISC",
   "engines": {
     "node": "=16.20.2",
-    "npm": ">=6.14.6",
-    "vercel-build": "echo hello"
+    "npm": ">=6.14.6"
   },
   "dependencies": {
     "axios": "^0.21.1",
