@@ -57,7 +57,6 @@ export default function Test() {
     
 
     const [orders, setOrders] = useState([])
-    console.log(orders)
 
     const getOrders = async () => {      //me traigo las compras
         try{
@@ -103,7 +102,6 @@ export default function Test() {
 
     }))
     const data = arr
-    console.log(data)
 
     return (
       

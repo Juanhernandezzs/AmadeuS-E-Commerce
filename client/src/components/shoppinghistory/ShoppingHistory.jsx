@@ -1,24 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
 import axios from "axios";
 import {
-  Typography,
-  Container,
   CardMedia,
   makeStyles,
   Grid,
-  Paper,
   Table,
   TableHead,
   TableRow,
   TableCell,
   TableBody,
+  Typography,
 } from "@material-ui/core";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import { numberWithCommas } from "../../utils";
 import NavSecondary from "./../navsecondary/NavSecondary";
-import { useDispatch, useSelector } from "react-redux";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useSelector } from "react-redux";
 const { REACT_APP_SERVER } = process.env;
 
 const useStyles = makeStyles((theme) => ({
@@ -31,15 +26,14 @@ const useStyles = makeStyles((theme) => ({
   },
   media: {
     width: "10%",
-    height: '10vh',
+    height: "10vh",
     margin: "0vh",
     backgroundSize: "contain",
   },
   tableCell: {
     padding: "1vw",
-   
   },
-  img: {   
+  img: {
     backgroundSize: "contain",
   },
 }));
@@ -49,8 +43,6 @@ export default function ShoppingHistory() {
   const userRedux = useSelector((state) => state.app.user);
 
   const [userDb, setUserDb] = useState();
-
-  console.log(userDb)
 
   const getUserById = async () => {
     try {
@@ -64,20 +56,42 @@ export default function ShoppingHistory() {
   };
 
   useEffect(() => {
-    getUserById(userRedux?._id);
+    getUserById(userRedux?._id); // eslint-disable-next-line
   }, [userRedux]);
 
   return (
     <>
       <NavSecondary />
-      <Grid container style={{ marginTop: "15vh"}} sm={12}>
-
-        <Table style={{width:'80%', margin:'auto' }}>
+      <Grid
+        container
+        sm={12}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "-10vh",
+        }}
+      >
+        <Typography
+          component="h1"
+          style={{ fontSize: "3vh", marginBottom: "5vh" }}
+        >
+          Historial de compras
+        </Typography>
+        <Table
+          style={{
+            width: "80%",
+            margin: "auto",
+            border: "2px solid black",
+          }}
+        >
           <TableHead>
             <TableRow>
-             
               <TableCell className={classes.tableCell}> Productos </TableCell>
-              <TableCell className={classes.tableCell}> Total Compra </TableCell>
+              <TableCell className={classes.tableCell}>
+                {" "}
+                Total Compra{" "}
+              </TableCell>
               <TableCell className={classes.tableCell}> Estado </TableCell>
               <TableCell className={classes.tableCell}> Ubicacion </TableCell>
             </TableRow>
@@ -86,19 +100,24 @@ export default function ShoppingHistory() {
             {userDb &&
               userDb.orders.map((order) => (
                 <TableRow>
-                  
                   <TableCell className={classes.tableCell}>
                     {order.products &&
                       order.products.map((product) => (
-                          <Container style ={{width:'10vh'}}>
-                          <CardMedia
-                            image={product.image}
-                            className={classes.img}
-                            />
-                          {/* <Typography>
+                        <CardMedia
+                          image={product.image}
+                          className={classes.img}
+                        />
+                        // <CardMedia >
+                        //   {" "}
+                        //   <img
+                        //     src={product.image}
+                        //     className={classes.img}
+                        //     alt="order"
+                        //   />
+                        // </CardMedia>
+                        /* <Typography>
                             ${numberWithCommas(product.price)}
-                          </Typography> */}
-                          </Container>
+                          </Typography> */
                       ))}
                   </TableCell>
 

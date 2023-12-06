@@ -6,7 +6,15 @@ import { alpha, makeStyles } from "@material-ui/core/styles";
 import axios from "axios";
 import { getByName } from "../../redux/actions/getByName";
 import { Link } from "react-router-dom";
-import { Card, CardMedia, Divider, Grid, Typography, Container, Box } from "@material-ui/core";
+import {
+  Card,
+  CardMedia,
+  Divider,
+  Grid,
+  Typography,
+  Container,
+  Box,
+} from "@material-ui/core";
 import { useDispatch, useSelector } from "react-redux";
 import { numberWithCommas } from "../../utils";
 import { useHistory } from "react-router";
@@ -38,13 +46,13 @@ const useStyles = makeStyles((theme) => ({
   },
   inputRoot: {
     color: "inherit",
+    width: "100%",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
     transition: theme.transitions.create("width"),
-    width: "100%",
     [theme.breakpoints.up("md")]: {
       width: "20ch",
     },
@@ -88,8 +96,8 @@ const useStyles = makeStyles((theme) => ({
   },
   searchBox: {
     position: "relative",
-    marginLeft: '10vh',
-    marginRight: '10vh',
+    marginLeft: "10vh",
+    marginRight: "10vh",
   },
   searchImage: {
     height: "50px",
@@ -100,12 +108,14 @@ const useStyles = makeStyles((theme) => ({
     marginRight: "10px",
     flexShrink: "0",
   },
+  searchContent: {
+    display: "flex",
+  },
 }));
 
 function SearchBar() {
   const classes = useStyles();
 
-  
   const search = useSelector(({ app }) => app.searchBar);
   const [name, setName] = useState(search);
   const [searchResults, setSearchResults] = useState([]);
@@ -143,7 +153,7 @@ function SearchBar() {
   };
 
   useEffect(() => {
-    doSearch();
+    doSearch(); // eslint-disable-next-line
   }, [name]);
 
   return (
@@ -166,7 +176,7 @@ function SearchBar() {
             onBlur={() => setTimeout(() => setFocused(false), 200)}
             onChange={handleChange}
           />
-          {name.length > 0 && focused && (
+          {name.length > 0&& focused && (
             <Grid className={classes.searchResults}>
               {searchResults.length > 0 ? (
                 searchResults.map((r) => (
@@ -178,10 +188,13 @@ function SearchBar() {
                     >
                       <CardMedia
                         className={classes.searchImage}
-                        image={`${REACT_APP_SERVER}/products/images/${r.image}` || "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAACuCAMAAAClZfCTAAAAIVBMVEX19fXd3d3z8/Pq6urb29vi4uLx8fHt7e3n5+fk5OTf39/UY198AAACNElEQVR4nO3a4Y6rIBCGYRUE9P4veO0KijB022xSTOd9zj/Xk9AvMgjOMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDualrGy+t6juhNXB7Sxofe4bmQVIxqt6z2w25jkhMbR9B7ZbcjzbMNMS3wroqX3yG7DtCJae4+sm+lqEFb8FNFU3qtCaAXyilVDSN7+J6Jx7j3+D2gWnkYkFzrK05OI1sV457wJ2avk9T9b1RHZOduTTcdd19qjOqK13GwEIro+QsJ7tPudbi5f8p3iWiSfe8zS0/bh4fYgRdQ6GRJOAJRGdG7oJx+CyaoSEe2Ot0GfZtZRmer3TJ0RpUVryfJIU6/avqmMKJ14XAqPjRlVR0kqI4qlp3xe4uVyVdMYUfzNVdVJ14koleZ6fd+nWnmurTGiPQlXH5HEha7ITmNETrz6sN9fFCOFEdl9yZeOIve/FGVcY0T7VSLK8BT9Sa5Fwqe0GAa1KO1h6xUtvnWzoqUkqs1Y7HmYiuw0RhR/c7UZW57e/tWqN6C4YTVWjKJ861YZUTouCpeM4gkJO/38McpWNXu0hFRbN50Rnb/arKPd/i3ulZu/l7Aby9uInMu+nAm9WUojanWjSQ1+WiOSMxL7+9RGJPXEyDfqjajqjnXSp1jlEW2z7fzG6OdWo5buiB4NRsGYsDQ61YnoNRoiEg7y36GiFbvZiE5Cp7KZ+g29hw4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIbhB3oYDvixwDtCAAAAAElFTkSuQmCC"}
+                        image={
+                          `${REACT_APP_SERVER}/products/images/${r.image}` ||
+                          "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASIAAACuCAMAAAClZfCTAAAAIVBMVEX19fXd3d3z8/Pq6urb29vi4uLx8fHt7e3n5+fk5OTf39/UY198AAACNElEQVR4nO3a4Y6rIBCGYRUE9P4veO0KijB022xSTOd9zj/Xk9AvMgjOMAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDualrGy+t6juhNXB7Sxofe4bmQVIxqt6z2w25jkhMbR9B7ZbcjzbMNMS3wroqX3yG7DtCJae4+sm+lqEFb8FNFU3qtCaAXyilVDSN7+J6Jx7j3+D2gWnkYkFzrK05OI1sV457wJ2avk9T9b1RHZOduTTcdd19qjOqK13GwEIro+QsJ7tPudbi5f8p3iWiSfe8zS0/bh4fYgRdQ6GRJOAJRGdG7oJx+CyaoSEe2Ot0GfZtZRmer3TJ0RpUVryfJIU6/avqmMKJ14XAqPjRlVR0kqI4qlp3xe4uVyVdMYUfzNVdVJ14koleZ6fd+nWnmurTGiPQlXH5HEha7ITmNETrz6sN9fFCOFEdl9yZeOIve/FGVcY0T7VSLK8BT9Sa5Fwqe0GAa1KO1h6xUtvnWzoqUkqs1Y7HmYiuw0RhR/c7UZW57e/tWqN6C4YTVWjKJ861YZUTouCpeM4gkJO/38McpWNXu0hFRbN50Rnb/arKPd/i3ulZu/l7Aby9uInMu+nAm9WUojanWjSQ1+WiOSMxL7+9RGJPXEyDfqjajqjnXSp1jlEW2z7fzG6OdWo5buiB4NRsGYsDQ61YnoNRoiEg7y36GiFbvZiE5Cp7KZ+g29hw4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIbhB3oYDvixwDtCAAAAAElFTkSuQmCC"
+                        }
                       ></CardMedia>
-                      <div>
-                        <Typography variant="body2" component="h3">
+                      <div className={classes.searchContent}>
+                        <Typography variant="body2" component="h3" style={{marginRight: "20px"}}>
                           ${numberWithCommas(r.price)}
                         </Typography>
                         <Typography variant="body2" component="h3">

@@ -96,7 +96,6 @@ export default function Sales() {
               className={classes.btn}
               onClick={() => {
                 const rowOrder = orders[rowIndex];
-                console.log(rowOrder);
                 setEditOrder(rowOrder._id);
                 setOrderStatus(rowOrder.status);
               }}

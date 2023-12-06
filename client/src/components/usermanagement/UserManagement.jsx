@@ -45,7 +45,6 @@ export default function UserManagement() {
   const classes = useStyles();
 
   const users = useSelector(({ app }) => app.usersLoaded);
-  console.log(users);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);

@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NavSecondary from "../navsecondary/NavSecondary";
-import { useAuth0 } from "@auth0/auth0-react";
 import {
-  Button,
-  Card,
   CardContent,
-  CardMedia,
   Grid,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
-  Menu,
-  MenuItem,
   Container,
   Typography,
 } from "@material-ui/core";
@@ -22,7 +16,6 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import CreateIcon from "@material-ui/icons/Create";
 import HistoryIcon from "@material-ui/icons/History";
 import { useSelector } from "react-redux";
-import { useDispatch } from "react-redux";
 import axios from "axios";
 const { REACT_APP_SERVER } = process.env;
 
@@ -31,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
   media: {
     width: "13vw",
     height: "13vw",
-    margin: "0vh",
+    margin: "3vh",
     borderRadius: "6.5vw",
     backgroundSize: "contain",
   },
@@ -49,6 +42,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     borderRadius: "10px",
     padding: "2vh",
+    marginTop: "5vh",
+    marginBottom: "5vh",
   },
   link: {
     textDecoration: "none",
@@ -57,10 +52,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function UserProfile() {
-  const { user } = useAuth0();
   const userRedux = useSelector(({ app }) => app.user);
   const classes = useStyles();
-  const dispatch = useDispatch();
   const [userDb, setUserDb] = useState();
 
   const getUserById = async () => {
@@ -75,7 +68,7 @@ function UserProfile() {
   };
 
   useEffect(() => {
-    getUserById(userRedux?._id);
+    getUserById(userRedux?._id); // eslint-disable-next-line
   }, [userRedux]);
 
   return (
@@ -91,15 +84,21 @@ function UserProfile() {
         >
           <NavSecondary />
           <Container className={classes.container}>
-            <img className={classes.media} src={userDb.picture} />
-            <CardContent>
-              <Typography variant="h5" component="h1">
-                Nombre: {userDb.name}
-              </Typography>
-              <Typography component="h1" className={classes.price}>
-                Email: {userDb.email}
-              </Typography>
-            </CardContent>
+            <div style={{ display: "flex" }}>
+              <img
+                className={classes.media}
+                src={userDb.picture}
+                alt="profile pic"
+              />
+              <CardContent>
+                <Typography variant="h5" component="h1">
+                  Nombre: {userDb.name}
+                </Typography>
+                <Typography component="h1" className={classes.price}>
+                  Email: {userDb.email}
+                </Typography>
+              </CardContent>
+            </div>
             <div style={{ display: "flex" }}>
               <List component="nav" aria-label="main mailbox folders">
                 <ListItem button component={Link} to="/favorites">

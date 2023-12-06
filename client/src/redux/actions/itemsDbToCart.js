@@ -2,7 +2,6 @@ import {ITEMS_DB_TO_CART, USER_ERRORS} from './index'
 
 
 export const itemsDbToCart = ( value ) => {
-    console.log('action', value)
     return (dispatch) => {
         try {
             return dispatch({

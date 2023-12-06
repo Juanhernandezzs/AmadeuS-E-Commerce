@@ -21,7 +21,6 @@ export function getAllUsers() {
   return async (dispatch) => {
     try {
       const users = await axios.get(`${REACT_APP_SERVER}/users`, { headers });
-      // console.log(users)
       return dispatch({
         type: GET_ALL_USERS,
         payload: users.data,
@@ -34,7 +33,6 @@ export function getAllUsers() {
 
 //Cuando inicia sesión el usuario, se envían los datos a la DB para guardarse y volver con la información actualizada
 export function saveUser(user, headers) {
-  console.log("headers", headers)
   return async (dispatch) => {
     try {
       const userDB = await axios.post(
@@ -51,21 +49,6 @@ export function saveUser(user, headers) {
     }
   }
 }
-
-// export function getUserById(id) {
-//   return async (dispatch) => {
-//     try {
-//       const userDB = await axios.get(`${REACT_APP_SERVER}/users/${id}`);
-//       console.log("get userDB", userDB.data);
-//       return dispatch({
-//         type: SAVE_USER,
-//         payload: userDB.data,
-//       });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
-// }
 
 export function cleanUser() {
   return {

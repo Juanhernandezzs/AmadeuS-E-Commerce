@@ -45,7 +45,6 @@ const shoppingCartReducer = (state = initialState, action) => {
             }
 
         case ITEMS_DB_TO_CART:
-            console.log('reducer', action.payload)
             if (action.payload.length) {
                 const itemsFromDb = action.payload.map((elem) => {
                     return {
