@@ -1,4 +1,4 @@
-import { DELETE_ONE_ITEM, USER_ERRORS } from ".";
+import { DELETE_ONE_ITEM } from ".";
 
 const deleteOneItem = ( _id ) => {
     

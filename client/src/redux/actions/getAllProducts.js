@@ -1,5 +1,5 @@
 import axios from "axios"
-import { GET_ALL_PRODUCTS, USER_ERRORS, SORT_BY_NAME, SORT_BY_PRICE, FILTER_BY_CATEGORY } from "./index"
+import { GET_ALL_PRODUCTS, SORT_BY_NAME, SORT_BY_PRICE, FILTER_BY_CATEGORY } from "./index"
 const { REACT_APP_SERVER } = process.env;
 
 

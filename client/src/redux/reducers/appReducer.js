@@ -15,7 +15,6 @@ import {
   REMOVE_ALL_FAVORITES,
   SORT_BY_PRICE_FAVORITES,
   SORT_BY_NAME_FAVORITES,
-  FILTER_BY_CATEGORY_FAVORITES,
   ADD_USER,
   GET_ALL_USERS,
   ADD_ORDER_ID,
@@ -52,7 +51,7 @@ const initialState = {
   reviewsLoaded: [],
   favorites: [],
   // allFavorites:[],
-  user: null,
+  user: undefined,
 };
 
 const appReducer = (state = initialState, action) => {

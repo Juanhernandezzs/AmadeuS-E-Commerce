@@ -1,43 +1,43 @@
 import { ADD_TO_CART, CLEAN_CART, DELETE_ONE_ITEM, DECREMENT_QUANTITY_ITEM, ITEMS_DB_TO_CART } from "../actions"
 
 const initialState = {
-    cart:[]
+    cart: []
 }
 
-const shoppingCartReducer = ( state = initialState, action ) => {  
-    
-    switch( action.type ){
-        
-        case ADD_TO_CART:
-           const itemAdded = state.cart.find( elem => elem._id === action.payload._id )           
-           return itemAdded ? {
-               ...state,
-               cart: state.cart.map( elem => 
-                elem._id === action.payload._id
-                ?{...elem, quantity: elem.quantity + 1 }
-                : elem
-                ),
-               }
-               :{
-                   ...state,
-                   cart: [...state.cart, {...action.payload, quantity: 1}]
-               }        
-        case DECREMENT_QUANTITY_ITEM:
-            const item = state.cart.find( elem => elem._id === action.payload._id )
-            
-            return item.quantity > 1 ?{
-                ...state,
-                cart: state.cart.map( elem => elem._id === action.payload._id
-                    ? {...elem, quantity: elem.quantity - 1 }
-                    : elem),
-            }: null
+const shoppingCartReducer = (state = initialState, action) => {
 
-        case DELETE_ONE_ITEM:         
+    switch (action.type) {
+
+        case ADD_TO_CART:
+            const itemAdded = state.cart.find(elem => elem._id === action.payload._id)
+            return itemAdded ? {
+                ...state,
+                cart: state.cart.map(elem =>
+                    elem._id === action.payload._id
+                        ? { ...elem, quantity: elem.quantity + 1 }
+                        : elem
+                ),
+            }
+                : {
+                    ...state,
+                    cart: [...state.cart, { ...action.payload, quantity: 1 }]
+                }
+        case DECREMENT_QUANTITY_ITEM:
+            const item = state.cart.find(elem => elem._id === action.payload._id)
+
+            return item.quantity > 1 ? {
+                ...state,
+                cart: state.cart.map(elem => elem._id === action.payload._id
+                    ? { ...elem, quantity: elem.quantity - 1 }
+                    : elem),
+            } : null
+
+        case DELETE_ONE_ITEM:
             return {
                 ...state,
-                cart: state.cart.filter( elem => elem._id !== action.payload)
+                cart: state.cart.filter(elem => elem._id !== action.payload)
             }
-        
+
         case CLEAN_CART:
             return {
                 ...state,
@@ -46,9 +46,9 @@ const shoppingCartReducer = ( state = initialState, action ) => {
 
         case ITEMS_DB_TO_CART:
             console.log('reducer', action.payload)
-            if(action.payload.length) {
-                const itemsFromDb = action.payload.map( (elem) => {
-                    return{
+            if (action.payload.length) {
+                const itemsFromDb = action.payload.map((elem) => {
+                    return {
                         quantity: elem.quantity,
                         brand: elem._id.brand,
                         categories: elem._id.categories,
@@ -66,10 +66,10 @@ const shoppingCartReducer = ( state = initialState, action ) => {
                     cart: itemsFromDb/* .concat(state.cart) */
                 }
             }
-        
+            break
         default:
             return state
-    }      
+    }
 }
 
 export default shoppingCartReducer

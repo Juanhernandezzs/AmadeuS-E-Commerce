@@ -1,5 +1,5 @@
 import axios from "axios"
-import { GET_DETAILS, USER_ERRORS } from "."
+import { GET_DETAILS } from "."
 const { REACT_APP_SERVER } = process.env;
 
 export const getDetails = (id) => {
