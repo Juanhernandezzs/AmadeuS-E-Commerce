@@ -3,7 +3,7 @@ Amadeus is an E-commerce project for <a href="https://soyhenry.com/">Henry</a>.
 
 ## Visit website
 Front-end and Back-end are deployed and you can visit the live version here:
-https://amadeus.vercel.app/
+https://amadeus-e-commerce.vercel.app/
 
 ## Technologies
 The technologies used are:
